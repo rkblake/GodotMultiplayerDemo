@@ -1,0 +1,101 @@
+[gd_scene load_steps=3 format=3 uid="uid://csjy5wq22dxdj"]
+
+[ext_resource type="Script" path="res://lobby.gd" id="1_dwk5p"]
+[ext_resource type="PackedScene" uid="uid://cbujdospkmdef" path="res://game.tscn" id="2_0lyw8"]
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dwk5p")
+game_scene = ExtResource("2_0lyw8")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Code: *****"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LeftPlayers" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[ul]
+Empty
+Empty
+Empty
+Empty
+Empty
+[/ul]"
+fit_content = true
+scroll_active = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="MoveLeft" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "<"
+
+[node name="MoveRight" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = ">"
+
+[node name="Ready" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Ready"
+
+[node name="RightPlayers" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[ul]
+Empty
+Empty
+Empty
+Empty
+Empty
+[/ul]"
+fit_content = true
+scroll_active = false
+
+[node name="Chat" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 256)
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+scroll_following = true
+
+[node name="ChatPrompt" type="LineEdit" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Send message to chat"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MoveLeft" to="." method="_on_move_left_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MoveRight" to="." method="_on_move_right_pressed"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Ready" to="." method="_on_ready_pressed"]
+[connection signal="text_submitted" from="MarginContainer/VBoxContainer/ChatPrompt" to="." method="_on_chat_prompt_text_submitted"]

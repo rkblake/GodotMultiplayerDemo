@@ -1,0 +1,173 @@
+[gd_scene load_steps=6 format=3 uid="uid://car74uxusrjeo"]
+
+[ext_resource type="Script" path="res://main_menu.gd" id="1_ffsuy"]
+[ext_resource type="PackedScene" uid="uid://csjy5wq22dxdj" path="res://lobby.tscn" id="2_d03qt"]
+[ext_resource type="PackedScene" uid="uid://cliq1xtcimk3f" path="res://game_browser.tscn" id="3_l0o55"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i6vn0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nix2k"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ffsuy")
+lobby_scene = ExtResource("2_d03qt")
+game_browser_scene = ExtResource("3_l0o55")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Really Awesome Multiplayer Game"
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_i6vn0")
+
+[node name="Username" type="LineEdit" parent="CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Username"
+max_length = 32
+
+[node name="CreateMatch" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Create Match"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Code" type="LineEdit" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Code"
+alignment = 1
+max_length = 5
+secret = true
+
+[node name="JoinMatch" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join Match"
+
+[node name="BrowseGames" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Browse Games"
+
+[node name="HostLocal" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Host LAN"
+
+[node name="JoinLocal" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Connect To IP"
+
+[node name="Quit" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[node name="CreateMatchModal" type="PopupPanel" parent="."]
+initial_position = 1
+size = Vector2i(221, 126)
+theme_override_styles/panel = SubResource("StyleBoxFlat_nix2k")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CreateMatchModal"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 205.0
+offset_bottom = 110.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CreateMatchModal/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CreateMatchModal/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Max Players: "
+
+[node name="MaxPlayers" type="SpinBox" parent="CreateMatchModal/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 10.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CreateMatchModal/VBoxContainer"]
+layout_mode = 2
+
+[node name="Private" type="Label" parent="CreateMatchModal/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Private:"
+
+[node name="PrivateToggle" type="CheckButton" parent="CreateMatchModal/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="Create" type="Button" parent="CreateMatchModal/VBoxContainer"]
+layout_mode = 2
+text = "Create"
+
+[node name="JoinIpModal" type="PopupPanel" parent="."]
+initial_position = 1
+size = Vector2i(288, 187)
+theme_override_styles/panel = SubResource("StyleBoxFlat_nix2k")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="JoinIpModal"]
+custom_minimum_size = Vector2(256, 0)
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 272.0
+offset_bottom = 171.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="JoinIpModal/VBoxContainer"]
+layout_mode = 2
+text = "IP"
+
+[node name="IP" type="LineEdit" parent="JoinIpModal/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "127.0.0.1"
+
+[node name="Label2" type="Label" parent="JoinIpModal/VBoxContainer"]
+layout_mode = 2
+text = "Port"
+
+[node name="Port" type="SpinBox" parent="JoinIpModal/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 65535.0
+value = 9000.0
+
+[node name="Join" type="Button" parent="JoinIpModal/VBoxContainer"]
+layout_mode = 2
+text = "Join"
+
+[connection signal="text_changed" from="CenterContainer/VBoxContainer/Username" to="." method="_on_username_text_changed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/HostLocal" to="." method="_on_host_local_pressed"]
+[connection signal="pressed" from="JoinIpModal/VBoxContainer/Join" to="." method="_on_join_local_pressed"]

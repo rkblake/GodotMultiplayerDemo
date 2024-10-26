@@ -1,0 +1,77 @@
+[gd_scene load_steps=2 format=3 uid="uid://cliq1xtcimk3f"]
+
+[ext_resource type="Script" path="res://game_browser.gd" id="1_jghst"]
+
+[node name="GameBrowser" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jghst")
+
+[node name="TabBar" type="TabBar" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+current_tab = 0
+clip_tabs = false
+tab_count = 2
+tab_0/title = "Internet"
+tab_1/title = "Local"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Refresh" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -68.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Refresh
+"
+
+[node name="Back" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 68.0
+grow_vertical = 0
+text = "Back"
+
+[node name="NoMatches" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="NoMatches"]
+layout_mode = 2
+text = "No matches"
+
+[connection signal="pressed" from="Refresh" to="." method="refresh"]
