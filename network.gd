@@ -2,7 +2,7 @@ extends Node
 
 const LOCAL_PORT := 9000
 const EXTERN_PORT := 9000
-const BIND_ADDRESS := "*"
+const BIND_ADDRESS := "0.0.0.0"
 const SERVER_ADDRESS := "192.168.1.178"
 #const SERVER_ADDRESS := "127.0.0.1"
 const MAX_CLIENTS := 10
@@ -17,6 +17,7 @@ var http_client := HTTPClient.new()
 var player_names := {}
 var code := ""
 var thread: Thread
+var health_port: int
 
 enum NET_STATUS {LOBBY, IN_GAME, FINISHED}
 var status := NET_STATUS.LOBBY
@@ -41,6 +42,7 @@ func _ready() -> void:
 	bind_address = get_env_or('BIND_ADDRESS', BIND_ADDRESS)
 	local_port = get_env_or('LOCAL_PORT', LOCAL_PORT)
 	max_clients = get_env_or('MAX_CLIENTS', MAX_CLIENTS)
+	health_port = get_env_or('HEALTH_PORT', 9001)
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
@@ -97,6 +99,7 @@ func server_create_match() -> Error:
 	if err:
 		printerr('Failed to host server: ' + error_string(err))
 		return err
+	print("Started server")
 	multiplayer.multiplayer_peer = enet_peer
 
 	return OK
@@ -156,7 +159,7 @@ func _on_server_disconnect() -> void:
 
 func healthcheck() -> void:
 	var client = StreamPeerTCP.new()
-	if client.connect_to_host("", 9001) != OK:
+	if client.connect_to_host("127.0.0.1", health_port) != OK:
 		printerr("failed to start healthcheck")
 		return
 	#tcp_server.listen(9001, "*")
@@ -172,7 +175,7 @@ func healthcheck() -> void:
 			elif msg == "shutdown":
 				get_tree().quit()
 	printerr("lost connection to host. shutting down")
-	#get_tree().quit(1)
+	get_tree().quit(1)
 
 func http_wait_for_status(h: HTTPClient, s: int, to: float) -> Error:
 	var t := 0.0

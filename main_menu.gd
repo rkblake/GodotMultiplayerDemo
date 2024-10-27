@@ -21,6 +21,7 @@ extends Control
 
 func _ready() -> void:
 	if OS.has_feature(Network.DEDICATED_SERVER):
+		print("Running dedicated server")
 		Network.server_create_match()
 		await get_tree().process_frame
 		get_tree().change_scene_to_packed(lobby_scene)
