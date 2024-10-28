@@ -19,6 +19,7 @@ func _ready():
 	if !OS.has_feature(Network.DEDICATED_SERVER): add_left(1)
 	Network.peer_connected.connect(_on_player_join)
 	multiplayer.peer_disconnected.connect(_on_player_leave)
+	Network.status = Network.NET_STATUS.LOBBY
 
 
 func _on_player_join(peer_id):

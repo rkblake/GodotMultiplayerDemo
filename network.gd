@@ -42,7 +42,7 @@ func _ready() -> void:
 	bind_address = get_env_or('BIND_ADDRESS', BIND_ADDRESS)
 	local_port = get_env_or('LOCAL_PORT', LOCAL_PORT)
 	max_clients = get_env_or('MAX_CLIENTS', MAX_CLIENTS)
-	health_port = get_env_or('HEALTH_PORT', 9001)
+	health_port = get_env_or('HEALTH_PORT', 8000)
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
@@ -159,22 +159,30 @@ func _on_server_disconnect() -> void:
 
 func healthcheck() -> void:
 	var client = StreamPeerTCP.new()
-	if client.connect_to_host("127.0.0.1", health_port) != OK:
+	if client.connect_to_host("host.docker.internal", health_port) != OK:
 		printerr("failed to start healthcheck")
 		return
-	#tcp_server.listen(9001, "*")
-	#while !tcp_server.is_connection_available(): pass
-	#var stream := tcp_server.take_connection()
-	print("healthcheck connected")
-	while client.get_status() == StreamPeerTCP.STATUS_CONNECTED:
+
+	var t := Time.get_ticks_msec() + 30*1000
+	while true:
 		client.poll()
-		while client.get_available_bytes() > 0:
-			var msg = client.get_utf8_string(client.get_available_bytes()).strip_escapes()
-			if msg == "keepalive":
-				client.put_utf8_string(NET_STATUS.keys()[status].to_lower())
-			elif msg == "shutdown":
-				get_tree().quit()
-	printerr("lost connection to host. shutting down")
+		var status = client.get_status()
+		match status:
+			StreamPeerTCP.STATUS_CONNECTING:
+				if Time.get_ticks_msec() > t:
+					printerr("healthcheck timed out. shutting down")
+					break
+			StreamPeerTCP.STATUS_NONE, StreamPeerTCP.STATUS_ERROR:
+				printerr("lost connection to host. shutting down")
+				break
+			StreamPeerTCP.STATUS_CONNECTED:
+				while client.get_available_bytes() > 0:
+					var msg = client.get_utf8_string(client.get_available_bytes()).strip_escapes()
+					if msg == "keepalive":
+						client.put_utf8_string(NET_STATUS.keys()[self.status].to_lower())
+					elif msg == "shutdown":
+						get_tree().quit() # TODO: not a graceful shutdown
+
 	get_tree().quit(1)
 
 func http_wait_for_status(h: HTTPClient, s: int, to: float) -> Error:
